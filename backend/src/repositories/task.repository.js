@@ -16,7 +16,7 @@ class TaskRepository{
 
     // find all task
     async getAllTasks(){
-        return await Task.findAll();
+        return await Task.find();
     }
 
     //find task by id

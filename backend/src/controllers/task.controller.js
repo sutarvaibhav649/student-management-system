@@ -1,5 +1,6 @@
 import taskService from "../services/task.service.js";
 
+//-------------- * create task controller * ------------------
 export const createTask = async (req, res, next) => {
   try {
     const task = await taskService.createTask(req.body);
@@ -13,9 +14,11 @@ export const createTask = async (req, res, next) => {
   }
 };
 
+
+//-------------- * get all task controller * ------------------
 export const getAllTasks = async (req, res, next) => {
   try {
-    const tasks = await taskService.getAllTasks();
+    const tasks = await taskService.getAllTask();
 
     res.status(200).json({
       success: true,
@@ -27,6 +30,7 @@ export const getAllTasks = async (req, res, next) => {
   }
 };
 
+//-------------- * get task by id controller * ------------------
 export const getTaskById = async (req, res, next) => {
   try {
     const task = await taskService.getTaskById(req.params.id);
@@ -40,6 +44,7 @@ export const getTaskById = async (req, res, next) => {
   }
 };
 
+//-------------- * update task controller * ------------------
 export const updateTask = async (req, res, next) => {
   try {
     const task = await taskService.updateTask(
@@ -56,6 +61,7 @@ export const updateTask = async (req, res, next) => {
   }
 };
 
+//-------------- * delete task controller * ------------------
 export const deleteTask = async (req, res, next) => {
   try {
     await taskService.deleteTask(req.params.id);
