@@ -2,25 +2,30 @@ import Task from "../models/task.model.js";
 
 class TaskRepository{
     // create task
-    async createTask(taskData){
+    async create(taskData){
         return await Task.create(taskData)
     }
 
     // update task
-    async updateById(id,newTaskData){
-       return await Task.findByIdAndUpdate(id,newTaskData,{
-        new:true,
+    async updateById(id, newTaskData){
+       return await Task.findByIdAndUpdate(id, newTaskData, {
+        new: true,
         runValidators: true,
        })
     }
 
-    // find all task
-    async getAllTasks(){
+    // find all tasks
+    async getAll(){
         return await Task.find();
     }
 
-    //find task by id
-    async findTaskById(id){
+    // find all tasks for a specific user
+    async getAllByUserId(userId){
+        return await Task.find({ user: userId });
+    }
+
+    // find task by id
+    async findById(id){
         return await Task.findById(id);
     }
 

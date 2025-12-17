@@ -2,49 +2,60 @@ import taskRepository from "../repositories/task.repository.js";
 
 class TaskService{
     //------------ * create task service * -----------------
-    async createTask(taskData){
-        if(new Date(taskData.dueDate) <= new Date()){
-            throw new Error("Due date must be in future")
+    async createTask(taskData, userId) {
+        if (new Date(taskData.dueDate) < new Date()) {
+            throw new Error("Due date cannot be in the past");
         }
-        return await taskRepository.createTask(taskData);
+
+        return await taskRepository.create({
+            ...taskData,
+            user: userId,
+        });
     }
 
     //--------------- * get all task service * --------------
-    async getAllTask(){
-        return await taskRepository.getAllTasks();
+    async getAllTasks(userId) {
+        return await taskRepository.getAllByUserId(userId); // CHANGED: from findTaskById to getAllByUserId
     }
 
     //--------------- * get task by Id * -------------------
-    async getTaskById(taskId){
-        const task = await task.getTaskById(taskId);
-        if(!task){
-            throw new Error("Task not found");
+    async getTaskById(taskId, userId) {
+        const task = await taskRepository.findById(taskId);
+
+        if (!task || task.user.toString() !== userId.toString()) {
+            const error = new Error("Task not found");
+            error.statusCode = 404;
+            throw error;
         }
 
         return task;
     }
 
     //---------------- * update task service * -----------------
-    async updateTask(taskId,updatedTask){
-        const task = await taskRepository.updateById(taskId,updatedTask);
+    async updateTask(taskId, updateData, userId) {
+        const task = await taskRepository.findById(taskId);
 
-        if (!task) {
-            throw new Error("Task not found");
+        if (!task || task.user.toString() !== userId.toString()) {
+            const error = new Error("Task not found");
+            error.statusCode = 404;
+            throw error;
         }
 
-        return task;
+        return await taskRepository.updateById(taskId, updateData);
     }
 
     //---------------- * delete task service * --------------------
-    async deleteTask(taskId){
-        const taskToDelete = await taskRepository.deleteById(taskId);
+    async deleteTask(taskId, userId) {
+        const task = await taskRepository.findById(taskId);
 
-         if (!taskToDelete) {
-            throw new Error("Task not found");
+        if (!task || task.user.toString() !== userId.toString()) {
+            const error = new Error("Task not found");
+            error.statusCode = 404;
+            throw error;
         }
 
-        return taskToDelete;
+        return await taskRepository.deleteById(taskId);
     }
 }
 
-export default new TaskService;
+export default new TaskService();

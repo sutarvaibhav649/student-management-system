@@ -3,7 +3,7 @@ import taskService from "../services/task.service.js";
 //-------------- * create task controller * ------------------
 export const createTask = async (req, res, next) => {
   try {
-    const task = await taskService.createTask(req.body);
+    const task = await taskService.createTask(req.body,req.user._id);
 
     res.status(201).json({
       success: true,
@@ -18,7 +18,7 @@ export const createTask = async (req, res, next) => {
 //-------------- * get all task controller * ------------------
 export const getAllTasks = async (req, res, next) => {
   try {
-    const tasks = await taskService.getAllTask();
+    const tasks = await taskService.getAllTasks(req.user._id);
 
     res.status(200).json({
       success: true,
@@ -33,7 +33,7 @@ export const getAllTasks = async (req, res, next) => {
 //-------------- * get task by id controller * ------------------
 export const getTaskById = async (req, res, next) => {
   try {
-    const task = await taskService.getTaskById(req.params.id);
+    const task = await taskService.getTaskById(req.params.id,req.user._id);
 
     res.status(200).json({
       success: true,
@@ -49,7 +49,8 @@ export const updateTask = async (req, res, next) => {
   try {
     const task = await taskService.updateTask(
       req.params.id,
-      req.body
+      req.body,
+      req.user._id
     );
 
     res.status(200).json({
@@ -64,7 +65,7 @@ export const updateTask = async (req, res, next) => {
 //-------------- * delete task controller * ------------------
 export const deleteTask = async (req, res, next) => {
   try {
-    await taskService.deleteTask(req.params.id);
+    await taskService.deleteTask(req.params.id,req.user._id);
 
     res.status(200).json({
       success: true,
