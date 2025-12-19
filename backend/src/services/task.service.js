@@ -8,8 +8,12 @@ class TaskService{
         }
 
         return await taskRepository.create({
-            ...taskData,
+            title: taskData.title,
+            description: taskData.description,
+            priority: taskData.priority,
+            dueDate: taskData.dueDate,
             user: userId,
+            completed: false,
         });
     }
 

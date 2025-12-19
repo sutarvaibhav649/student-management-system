@@ -1,32 +1,51 @@
-import { BrowserRouter,Routes,Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import Task from "./pages/Task.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import Signup from "./pages/Register.jsx";
+import Tasks from "./pages/Task.jsx";
+import AddTask from "./pages/AddTask.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AppLayout from "./components/AppLayout";
+import Home from "./pages/Home";
 
-
-function App() {
+const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/signup" element={<Register/>}/>
+        {/* ---------- Public Routes ---------- */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<Home />} />
 
+        {/* ---------- Protected Routes ---------- */}
         <Route
           path="/tasks"
           element={
             <ProtectedRoute>
-              <Task />
+              <AppLayout>
+                <Tasks />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
 
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="/tasks/new"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <AddTask />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
+        {/* ---------- Default / Fallback ---------- */}
+       
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
-  )
-}
+    </Router>
+  );
+};
 
-export default App
+export default App;
