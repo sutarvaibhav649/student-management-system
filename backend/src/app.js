@@ -7,7 +7,12 @@ import authRoutes from "./routes/auth.routes.js";
 const app = express();
 
 //------------- * Global Middlewares * -------------
-app.use(cors());
+app.use(cors(
+    {
+        origin: "*", 
+        credentials: true,
+    }
+));
 app.use(express.json());
 
 //-------------- * Health check * -------------------
