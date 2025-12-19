@@ -1,6 +1,42 @@
 import React from 'react'
-import {Link} from "react-router-dom";
+import {data, Link, useNavigate} from "react-router-dom";
+import { useState } from 'react';
+import { registerUser } from '../services/api.js';
 const Register = () => {
+
+  const navigate = useNavigate();
+
+  const [formData,setFormData] = useState({
+    name:"",
+    email:"",
+    password:""
+  });
+
+  const [loading,setLoading] = useState(false);
+  const [error,setError] = useState("");
+
+  const handleChanges = (e)=>{
+    setFormData({
+      ...formData,
+      [e.target.name]:e.target.value,
+    });
+  }
+
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await registerUser(formData);
+      navigate("/login")
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration Failed");
+    }finally{
+      setLoading(false);
+    }
+  }
+
   return (
     // outer div
       <div className=' min-h-screen flex justify-center items-center bg-gray-900'>
@@ -8,8 +44,11 @@ const Register = () => {
           <h1 className=' text-2xl font-bold text-center text-white mb-6'>
             Register
           </h1>
+          {error && (
+            <p className="text-red-400 text-sm mb-3">{error}</p>
+          )}
           {/* ================= login form starts ================ */}
-          <form className=' space-y-4'>
+          <form onSubmit={handleSubmit} className=' space-y-4'>
             <div>
               {/* ========= Name input starts ========== */}
               <label className=' block text-sm text-gray-300 mb-1'>
@@ -18,6 +57,8 @@ const Register = () => {
               <input 
                 type="text"
                 placeholder='Vaibhav Sutar'
+                onChange={handleChanges}
+                name='name'
                 className='w-full px-4 py-2 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-500'
               />
               {/* ========= Name input Ends ========== */}
@@ -28,6 +69,8 @@ const Register = () => {
               <input 
                 type="email"
                 placeholder='you@example.com'
+                onChange={handleChanges}
+                name='email'
                 className='w-full px-4 py-2 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-500'
               />
               {/* ========= Email input Ends ========== */}
@@ -38,16 +81,19 @@ const Register = () => {
               <input
                 type='password'
                 placeholder='**********'
+                onChange={handleChanges}
+                name='password'
                 className='w-full px-4 py-2 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-500'
               />
               {/* ========= Password input Ends ========== */}
             </div>
             {/* =========== Login Button starts =========== */}
             <button
+              disabled={loading}
               type='submit' 
               className=' w-full bg-blue-500 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition hover:cursor-pointer'           
             >  
-            Login
+            {loading ? "creating ..." : "Create Account"}
             </button>
           
             {/* =========== Login Button ends =========== */}

@@ -1,13 +1,22 @@
-import React from 'react'
+import { useAuth } from "../contexts/AuthContext"
 
 const Task = () => {
+
+  const {logout} = useAuth();
+
   return (
     <>
-        <div className=' bg-gray-200'>
-            <h1 className=' text-2xl text-blue-500'>
-                Task Page
-            </h1>
+        <div className="min-h-screen p-6">
+          <button
+            onClick={logout}
+            className="bg-red-600 text-white px-4 py-2 rounded"
+          >
+            Logout
+          </button>
+
+          <h1 className="text-2xl font-semibold mt-6">Tasks Page</h1>
         </div>
+
     </> 
   )
 }
